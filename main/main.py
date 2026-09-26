@@ -60,10 +60,7 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "nome": "lucas-v1",
         "gds": "circuito-lucas-v1/MZI_50GHZ_2_stages_Lucas.gds",
         "celula": "TOP",
-        # A TOP do Lucas vai de cerca de (-511, -280) a (455, 284) µm.
-        # Esta origem deixa o canto inferior esquerdo em (-4100, -4400).
-        # Em x=-4400 o bloco encosta no anel de metal e o DRC parte o design_area.
-        "origem_um": (-3589.272, -4120.388),
+        "origem_um": (-4100, -4400),
     },
     {
         "nome": "mariana-v1",
