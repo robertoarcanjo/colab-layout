@@ -93,7 +93,7 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "nome": "lucas_d5-v2",
         "gds": "circuitos-lucas-v2/MZI_50GHZ_2_stages_d5_Lucas.gds",
         "celula": "TOP",
-        "origem_um": (-3131.00000, -3076.00000),
+        "origem_um": (-4100, 2850),
     },
     {
         "nome": "mariana_d5-v2",
@@ -107,11 +107,19 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "gds": "circuito-mariana-v2/CircuitoMariana10um.gds",
         "celula": "TOP",
         # Aviso de Lucas: Nunca mecha na posição y do de Mariana, o x pode ser modificado a vontade
-        "origem_um": (-4088.00000, -2610.00000),
+        "origem_um": (-2400, 4200),
     },
     {
         "nome": "eletrico-lucas-mariana",
         "gds": "circuitos-lucas-v2/circuito-eletrico-lucas-mariana.gds",
+        "celula": "TOP",
+        # Coordenadas absolutas da main. A célula TOP já cobre cerca de
+        # x = -4398 a -1780 µm e y = -4253 a -2448 µm, sobre Lucas d10 e Mariana.
+        "origem_um": (0.0, 0.0),
+    },
+    {
+        "nome": "eletrico-lucas-mariana-2",
+        "gds": "circuitos-lucas-v2/circuito-eletrico-lucas-mariana-2.gds",
         "celula": "TOP",
         # Coordenadas absolutas da main. A célula TOP já cobre cerca de
         # x = -4398 a -1780 µm e y = -4253 a -2448 µm, sobre Lucas d10 e Mariana.
