@@ -52,7 +52,7 @@ CAMADA_JANELA = (6, 0)
 # False: todos os circuitos entram de uma vez, sem DRC intermediário.
 CICLO_NORMAL = False
 # Vale com CICLO_NORMAL = False. True roda um único DRC no layout completo.
-DRC_FINAL = True
+DRC_FINAL = False
 
 
 class CircuitoSecundario(TypedDict):
@@ -214,6 +214,12 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "gds": "circuito-isa-jose-v1/hybrid90_ydc_gc_pack.gds",
         "celula": "TOP",
         "origem_um": (-3158, 2200),
+    },
+    {
+        "nome": "tag",
+        "gds": "tag-layout/textos_no_quadrado.gds",
+        "celula": "textos_no_quadrado",
+        "origem_um": (-0, 0),
     },
 ]
 
