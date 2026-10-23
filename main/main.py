@@ -217,9 +217,9 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
     },
     {
         "nome": "tag",
-        "gds": "tag-layout/textos_no_quadrado.gds",
-        "celula": "textos_no_quadrado",
-        "origem_um": (-0, 0),
+        "gds": "tag-layout/tags_chip_Lucivaldo.gds",
+        "celula": "tags_chip_Lucivaldo",
+        "origem_um": (0, 0),
     },
 ]
 

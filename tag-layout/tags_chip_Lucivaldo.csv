@@ -1,0 +1,10 @@
+TAG, SIZE, COORDX, COORDY, POS, LABEL
+I0-M1, 140, 2200, -2900, esquerda, MZI com dados do FDTD
+I0-M2, 140, 3450, -3220, esquerda, MZI com dados de fabricação
+I0-M1\nGC_OUT-1,10,890,-2884,direita, 
+I0-M1\nGC_OUT-2,10,890,-3134,direita,
+I0-M1\nGC_OUT-3,10,890,-3384,direita,
+I0-M1\nGC_OUT-4,10,890,-3634,direita, 
+I0-M1\nGC_OUT\nFF0,10,890,-2634,direita, 
+I0-M1\nGC_OUT\nFF1,10,890,-3884,direita, 
+I0-M1\nGC_IN,10,2370,-3260,esquerda, 

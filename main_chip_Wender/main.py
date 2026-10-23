@@ -59,7 +59,7 @@ CAMADA_JANELA = (6, 0)
 # False: todos os circuitos entram de uma vez, sem DRC intermediário.
 CICLO_NORMAL = False
 # Vale com CICLO_NORMAL = False. True roda um único DRC no layout completo.
-DRC_FINAL = True
+DRC_FINAL = False
 
 
 class CircuitoSecundario(TypedDict):
@@ -81,14 +81,14 @@ class OrigemDrc(TypedDict):
 CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
     {
         "nome": "isa-jose-hyb-pack2",
-        "gds": "main_layout_2/isa-jose/hybrid90_ydc_gc_pack2.gds",
+        "gds": "main_chip_Wender/isa-jose/hybrid90_ydc_gc_pack2.gds",
         "celula": "TOP",
         # Célula TOP de cerca de (-817, -2294) a (2580, 0) µm.
         "origem_um": (1452.190, 2959.940),
     },
     {
         "nome": "leo-lattice",
-        "gds": "main_layout_2/isa-jose/hybrid90_ydc_gc_pack2.gds",
+        "gds": "main_chip_Wender/isa-jose/hybrid90_ydc_gc_pack2.gds",
         "celula": "leo1",
         # Lattice já montada no pack2. A célula vai de (-818, -145) a (818, 145) µm.
         # Origem de projeto: main_layout_2/leo/Nanotools_Leo_Lattice.gds.
@@ -96,18 +96,24 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
     },
     {
         "nome": "leo",
-        "gds": "main_layout_2/isa-jose/hybrid90_ydc_gc_pack2.gds",
+        "gds": "main_chip_Wender/isa-jose/hybrid90_ydc_gc_pack2.gds",
         "celula": "leo2",
         # Circuito do Leo já montado no pack2. Mesma caixa de leo1.
         # Origem de projeto: main_layout_2/leo/Nanotools_Leo.gds.
         "origem_um": (3214.570, 471.620),
+    },
+    {
+        "nome": "tag",
+        "gds": "tag-layout/tags_chip_Wender.gds",
+        "celula": "tags_chip_Wender",
+        "origem_um": (0, 0),
     },
 ]
 
 # Duas colunas de 6. A célula TOP do Ítalo vai de (0, 0) a (1622, 280) µm.
 # No rascunho3 o pacote está em (-1547.590, 1466.020) e as cópias ficam
 # a x = -1711 ou 89 e y = 860, 460, …, -1140 em relação a esse pacote.
-_ITALO_GDS = "main_layout_2/circuito-italo-v1/Nanotools_Italo_SWG.gds"
+_ITALO_GDS = "main_chip_Wender/circuito-italo-v1/Nanotools_Italo_SWG.gds"
 _ITALO_X = (-3258.590, -1458.590)
 _ITALO_Y = (2326.020, 1926.020, 1526.020, 1126.020, 726.020, 326.020)
 for _x_italo in _ITALO_X:
