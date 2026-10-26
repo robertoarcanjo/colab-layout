@@ -19,7 +19,7 @@ import siepic_forge as siepic
 LADO_UM = 9000.0
 LIMITE_UM = LADO_UM / 2.0
 LADOS = ("esquerda", "direita", "cima", "baixo")
-CAMADA_SILICIO = "Si"
+CAMADA_METAL = "M2_router"
 CAMADA_MOLDURA = "Floor Plan-Not Fabricated"
 CAMADA_TEXTO = "Text"
 LARGURA_MOLDURA_UM = 40.0
@@ -57,7 +57,7 @@ class Tag:
 
 @pf.parametric_component
 def caractere(*, texto: str = "A", tamanho: float = 10.0) -> pf.Component:
-    """Desenha um texto ASCII na camada de silício (1/0)."""
+    """Desenha um texto ASCII na camada de metal (12/0, TiW/Au)."""
     texto_str = str(texto)
     if not texto_str.strip():
         raise ValueError("texto não pode ser vazio")
@@ -66,7 +66,7 @@ def caractere(*, texto: str = "A", tamanho: float = 10.0) -> pf.Component:
         raise ValueError("Podem existir guias separados por menos de 60 nm.")
 
     componente = pf.Component(_nome_celula("char", texto_str, f"{tamanho_um:g}"))
-    componente.add(CAMADA_SILICIO, *pf.text(texto_str, tamanho_um, typeface=1))
+    componente.add(CAMADA_METAL, *pf.text(texto_str, tamanho_um, typeface=1))
     return componente
 
 
@@ -200,9 +200,9 @@ def exportar_gds(layout: pf.Component, destino: Path) -> pf.Component:
     conferido = pf.load_layout(destino, technology=tech)[layout_gds.name]
     if conferido.get_structures(layer=CAMADA_MOLDURA):
         raise RuntimeError(f"a moldura permanece em {destino}")
-    limites_si = conferido.bounds(layers=[CAMADA_SILICIO])
-    if limites_si is None:
-        raise RuntimeError(f"o GDS {destino.name} não tem silício")
+    limites_metal = conferido.bounds(layers=[CAMADA_METAL])
+    if limites_metal is None:
+        raise RuntimeError(f"o GDS {destino.name} não tem metal")
     return conferido
 
 
@@ -217,7 +217,7 @@ def _relatar(caminho: Path, tags: list[Tag], textos: list[pf.Component], destino
             print(f"    {tag.rotulo}")
     print(destino.resolve())
     print("  bounds do GDS (µm):", conferido.bounds())
-    print("  silício (µm):", conferido.bounds(layers=[CAMADA_SILICIO]))
+    print("  metal (µm):", conferido.bounds(layers=[CAMADA_METAL]))
     print("  camadas:", sorted(conferido.layers(include_dependencies=True)))
 
 

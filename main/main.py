@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 import tempfile
 import time
 import xml.etree.ElementTree as ET
@@ -221,9 +222,15 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "celula": "tags_chip_Lucivaldo",
         "origem_um": (0, 0),
     },
+    {
+        "nome": "SEM",
+        "gds": "SEM\SEM_chip_Lucivaldo.gds",
+        "celula": "SEM_chip_Lucivaldo",
+        "origem_um": (0, 0),
+    },
 ]
 
-# -1690.00000
+# -1690.00000 
 
 # Falhas duras já aceitas no circuito que ocupa a origem da main.
 HOST_HARD = frozenset({"design_area", "si_width"})
@@ -390,24 +397,13 @@ def _nome_unico(prefixo: str) -> str:
 
 # O EdgeProcessor do KLayout 0.30.7 às vezes entra em gs.is_reset no
 # merge de um bloco grande (o Ítalo tem ~16 mil polígonos de silício).
-# A mesma região aceita o merge na chamada seguinte.
+# A mesma região aceita o merge na chamada seguinte. O isa-jose-hyb
+# tem ~26 mil polígonos em 4,7 mm: o merge único aborta o processo,
+# sem exceção para repetir. Acima de 4 mm a caixa é cortada em
+# ladrilhos de 1 mm, com poucos milhares de polígonos cada um.
 _TENTATIVAS_BOOL = 6
-
-
-def _sem_travar(acao, descricao: str):
-    ultimo: RuntimeError | None = None
-    for tentativa in range(1, _TENTATIVAS_BOOL + 1):
-        try:
-            return acao()
-        except RuntimeError as exc:
-            ultimo = exc
-            if "gs.is_reset" not in str(exc) or tentativa == _TENTATIVAS_BOOL:
-                raise
-            print(
-                f"boolean do KLayout travou ({descricao}); "
-                f"tentativa {tentativa + 1} de {_TENTATIVAS_BOOL}"
-            )
-    raise ultimo
+_LIMITE_MERGE_UM = 4000.0
+_LADO_LADRILHO_UM = 1000.0
 
 
 def _regiao(comp: gf.kf.KCell, camada: tuple[int, int]) -> gf.kdb.Region:
@@ -428,6 +424,142 @@ def _regiao_na_caixa(
     formas.region = caixa
     formas.overlapping = True
     return gf.kdb.Region(formas)
+
+
+# O booleano grande, repetido no mesmo processo, corrompe o estado do
+# EdgeProcessor. A chamada seguinte aborta o interpretador (não vira
+# exceção). Um processo novo começa com o estado limpo; se ele morrer,
+# a tentativa seguinte é outro processo.
+_SCRIPT_CONTAGEM = """
+import sys
+import klayout.db as db
+
+lay = db.Layout()
+lay.read(sys.argv[1])
+top = lay.top_cell()
+bloco = db.Region(top.begin_shapes_rec(lay.layer(1, 0)))
+atual = db.Region(top.begin_shapes_rec(lay.layer(2, 0)))
+bloco.merge()
+atual.merge()
+print("COUNT", (atual & bloco).count())
+"""
+
+
+def _contagem_isolada(
+    atual_si: gf.kdb.Region,
+    bloco_si: gf.kdb.Region,
+    dbu: float,
+    nome: str,
+) -> int:
+    if atual_si.is_empty() or bloco_si.is_empty():
+        return 0
+    ultimo = ""
+    for tentativa in range(1, _TENTATIVAS_BOOL + 1):
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as pasta:
+            caminho = Path(pasta) / "par.oas"
+            lay = gf.kdb.Layout()
+            lay.dbu = dbu
+            top = lay.create_cell("TOP")
+            top.shapes(lay.layer(1, 0)).insert(bloco_si)
+            top.shapes(lay.layer(2, 0)).insert(atual_si)
+            lay.write(str(caminho))
+            proc = subprocess.run(
+                [sys.executable, "-c", _SCRIPT_CONTAGEM, str(caminho)],
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+        if proc.returncode == 0:
+            for linha in proc.stdout.splitlines():
+                if linha.startswith("COUNT "):
+                    return int(linha.split(maxsplit=1)[1])
+            raise RuntimeError(
+                f"contagem de {nome} sem resultado: {proc.stdout!r}"
+            )
+        linhas = (proc.stderr or proc.stdout or "").strip().splitlines()
+        ultimo = linhas[-1] if linhas else f"código {proc.returncode}"
+        if tentativa == _TENTATIVAS_BOOL:
+            break
+        print(
+            f"boolean do KLayout travou ({nome}); "
+            f"tentativa {tentativa + 1} de {_TENTATIVAS_BOOL}",
+            flush=True,
+        )
+    raise RuntimeError(f"boolean do KLayout não concluiu ({nome}): {ultimo}")
+
+
+def _margem(caixa: gf.kdb.Box) -> gf.kdb.Box:
+    return gf.kdb.Box(
+        caixa.left - 1,
+        caixa.bottom - 1,
+        caixa.right + 1,
+        caixa.top + 1,
+    )
+
+
+def _contida(bb: gf.kdb.Box, caixa: gf.kdb.Box) -> bool:
+    return (
+        bb.left >= caixa.left
+        and bb.right <= caixa.right
+        and bb.bottom >= caixa.bottom
+        and bb.top <= caixa.top
+    )
+
+
+def _janela_ladrilho(
+    caixa: gf.kdb.Box, lado: int, ix: int, iy: int
+) -> gf.kdb.Box:
+    esquerda = int(caixa.left) + ix * lado
+    baixo = int(caixa.bottom) + iy * lado
+    return gf.kdb.Box(
+        esquerda,
+        baixo,
+        min(esquerda + lado, int(caixa.right)),
+        min(baixo + lado, int(caixa.top)),
+    )
+
+
+def _guardar(grupos: dict[tuple[int, int], gf.kdb.Region], chave, poligono) -> None:
+    grupo = grupos.get(chave)
+    if grupo is None:
+        grupo = gf.kdb.Region()
+        grupos[chave] = grupo
+    grupo.insert(poligono)
+
+
+def _pedacos(
+    regiao: gf.kdb.Region, caixa: gf.kdb.Box, lado: int
+) -> list[tuple[gf.kdb.Region, gf.kdb.Box]]:
+    """Recorta o silício do bloco em janelas de `lado` unidades de banco.
+
+    O polígono que atravessa a grade entra nos dois ladrilhos, já
+    cortado. A contagem pode subir um polígono na emenda; zero continua
+    zero.
+    """
+    grupos: dict[tuple[int, int], gf.kdb.Region] = {}
+    for poligono in regiao.each():
+        bb = poligono.bbox()
+        if bb.right <= bb.left or bb.top <= bb.bottom:
+            continue
+        ix0 = max(0, int(bb.left - caixa.left) // lado)
+        iy0 = max(0, int(bb.bottom - caixa.bottom) // lado)
+        ix1 = max(ix0, int(bb.right - caixa.left - 1) // lado)
+        iy1 = max(iy0, int(bb.top - caixa.bottom - 1) // lado)
+        for ix in range(ix0, ix1 + 1):
+            for iy in range(iy0, iy1 + 1):
+                janela = _janela_ladrilho(caixa, lado, ix, iy)
+                if _contida(bb, janela):
+                    _guardar(grupos, (ix, iy), poligono)
+                    continue
+                parte = gf.kdb.Region()
+                parte.insert(poligono)
+                parte &= gf.kdb.Region(janela)
+                for pedaco in parte.each():
+                    _guardar(grupos, (ix, iy), pedaco)
+    pedacos: list[tuple[gf.kdb.Region, gf.kdb.Box]] = []
+    for (ix, iy), grupo in grupos.items():
+        pedacos.append((grupo, _janela_ladrilho(caixa, lado, ix, iy)))
+    return pedacos
 
 
 def silicon_overlap(
@@ -452,17 +584,23 @@ def silicon_overlap(
     # A interseção só pode cair dentro do bloco. O booleano do chip
     # inteiro faz o KLayout abortar (dbEdgeProcessor gs.is_reset)
     # quando a região da Mariana entra.
-    margem = gf.kdb.Box(
-        caixa.left - 1,
-        caixa.bottom - 1,
-        caixa.right + 1,
-        caixa.top + 1,
+    limite = int(round(_LIMITE_MERGE_UM / dbu))
+    if caixa.right - caixa.left <= limite and caixa.top - caixa.bottom <= limite:
+        atual_si = _regiao_na_caixa(atual, CAMADA_SI, _margem(caixa))
+        return _contagem_isolada(atual_si, bloco_si, dbu, bloco.name)
+    lado = int(round(_LADO_LADRILHO_UM / dbu))
+    if lado < 1:
+        lado = 1
+    pedacos = _pedacos(bloco_si, caixa, lado)
+    print(
+        f"silício de {bloco.name} em {len(pedacos)} ladrilhos "
+        f"de {_LADO_LADRILHO_UM:.0f} µm"
     )
-    atual_si = _regiao_na_caixa(atual, CAMADA_SI, margem)
-    _sem_travar(bloco_si.merge, f"merge de {bloco.name}")
-    _sem_travar(atual_si.merge, "merge da main")
-    inter = _sem_travar(lambda: atual_si & bloco_si, f"interseção com {bloco.name}")
-    return inter.count()
+    total = 0
+    for parte, janela in pedacos:
+        atual_si = _regiao_na_caixa(atual, CAMADA_SI, _margem(janela))
+        total += _contagem_isolada(atual_si, parte, dbu, bloco.name)
+    return total
 
 
 def _copiar_arvore(destino: gf.kdb.Layout, origem: gf.kf.KCell) -> gf.kdb.Cell:
