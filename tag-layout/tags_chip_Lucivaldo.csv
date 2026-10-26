@@ -7,4 +7,20 @@ I0-M1\nGC_OUT-3,10,890,-3384,direita,
 I0-M1\nGC_OUT-4,10,890,-3634,direita, 
 I0-M1\nGC_OUT\nFF0,10,890,-2634,direita, 
 I0-M1\nGC_OUT\nFF1,10,890,-3884,direita, 
-I0-M1\nGC_IN,10,2370,-3260,esquerda, 
+I0-M1\nGC_IN,10,2370,-3260,esquerda,
+LM-M1, 140, -3245, -4370, esquerda, MZI com curvas de 5um
+ML-M1, 140, -1430, -4130, esquerda, MZI com curvas de 5um
+LM-M2, 140, -3600, 2830, esquerda, MZI com curvas de 10um
+ML-M2, 140, -2400, 4100, esquerda, MZI com curvas de 10um
+I0-H01, 50, -4300, 2048, direita, 
+I0-H02, 50, -4300, 2900+400*1, direita, 
+I0-H03, 50, -4300, 2900+400*2, direita, 
+I0-H04, 50, -4300, 2900+400*3, direita, 
+I0-H05, 50, -4300, 2900+400*4, direita, 
+I0-H06, 50, -4300, 2900+400*5, direita, 
+I0-H07, 50, -4300, 2900+400*6, direita, 
+I0-H08, 50, -4300, 2900+400*7, direita, 
+I0-H09, 50, -4300, 2900+400*8, direita, 
+I0-H10, 50, -4300, 2900+400*9, direita, 
+I0-H11, 50, -4300, 2900+400*10, direita, 
+I0-H12, 50, -4300, 2900+400*11, direita, 
