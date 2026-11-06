@@ -1,12 +1,12 @@
 main final
 
-design_area = 1329
-pin_layer = 3278
+au_space = 779
+au_width = 705
+pin_layer = 2984
 si_width = 5
-design_area área = 2282125 µm²
 
-falha dura fora da origem: nenhuma
-baseline design_area: 1329 marcadores, 2282125 µm²
+falha dura fora da origem: {'au_width': 705, 'au_space': 779}
+baseline design_area: 0 marcadores, 0 µm²
 baseline si_width: 5
 baseline si_space: 0
-metal: sem erro
+metal: {'au_width': 705, 'au_space': 779}

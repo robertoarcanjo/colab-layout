@@ -1,19 +1,13 @@
 main final
 
-design_area = 1325
-pin_layer = 3320
-si_space = 25316
+au_space = 88
+au_width = 373
+pin_layer = 2552
+si_space = 25038
 si_width = 52522
-design_area área = 2282125 µm²
 
-falha dura fora da origem: nenhuma
-baseline design_area: 1325 marcadores, 2282125 µm²
+falha dura fora da origem: {'au_width': 373, 'au_space': 88}
+baseline design_area: 0 marcadores, 0 µm²
 baseline si_width: 52522
-baseline si_space: 25316
-metal: sem erro
-
-DRC anterior do layout base (NanoSOI_drc.lyrdb):
-  design_area = 1325
-  si_width = 52522
-  si_space = 23828
-  design_area área = 2282125 µm²
+baseline si_space: 25038
+metal: {'au_width': 373, 'au_space': 88}

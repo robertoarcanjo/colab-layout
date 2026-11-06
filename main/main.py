@@ -53,7 +53,7 @@ CAMADA_JANELA = (6, 0)
 # False: todos os circuitos entram de uma vez, sem DRC intermediário.
 CICLO_NORMAL = False
 # Vale com CICLO_NORMAL = False. True roda um único DRC no layout completo.
-DRC_FINAL = False
+DRC_FINAL = True
 
 
 class CircuitoSecundario(TypedDict):
@@ -101,71 +101,10 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "nome": "italo-v1",
         "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
         "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2390, -1690.00000 + 9*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2390, -1690.00000 + 8*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2390, -1690.00000 + 7*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2390, -1690.00000 + 6*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2390, -1690.00000 + 5*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2390, -1690.00000 + 4*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2540, -1690.00000 + 3*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2540, -1690.00000 + 2*400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2540, -1690.00000 + 400),
-    },
-    {
-        "nome": "italo-v1",
-        "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
-        "celula": "TOP",
-        # Célula TOP de cerca de (-889, -138) a (733, 142) µm.
-        "origem_um": (2540, -1690.00000),
+        # As dez faixas já estão neste GDS, no lugar das cópias antigas.
+        # A de cima repete o box de 40,92 µm; as outras varrem de 0,22 µm.
+        # A origem é o canto inferior esquerdo da faixa de baixo.
+        "origem_um": (2390, -1690),
     },
     {
         "nome": "lucas_d5-v2",

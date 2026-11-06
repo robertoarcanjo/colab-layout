@@ -1,10 +1,10 @@
-"""Inclui o híbrido, os blocos do Leo e as cópias do Ítalo, e roda o DRC.
+"""Inclui o híbrido, os blocos do Leo e o bloco do Ítalo, e roda o DRC.
 
 O layout base é ``main/main_layout.gds``. As coordenadas saem dos rascunhos:
 
 - ``rascunho/main_rascunho.gds``: híbrido e Leo, células do pack2
-- ``rascunho/main_rascunho3.gds``: 12 cópias de ``Nanotools_Italo_SWG.gds``
-  em duas colunas na esquerda
+- ``rascunho/main_rascunho3.gds``: o bloco do Ítalo ocupava 12 cópias;
+  agora elas estão num único GDS, em duas colunas na esquerda
 
 No final o script grava o relatório e um ``.lyrdb.w`` com todos os
 marcadores em ``waived``.
@@ -59,7 +59,7 @@ CAMADA_JANELA = (6, 0)
 # False: todos os circuitos entram de uma vez, sem DRC intermediário.
 CICLO_NORMAL = False
 # Vale com CICLO_NORMAL = False. True roda um único DRC no layout completo.
-DRC_FINAL = False
+DRC_FINAL = True
 
 
 class CircuitoSecundario(TypedDict):
@@ -115,22 +115,18 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
     },
 ]
 
-# Duas colunas de 6. A célula TOP do Ítalo vai de (0, 0) a (1622, 280) µm.
-# No rascunho3 o pacote está em (-1547.590, 1466.020) e as cópias ficam
-# a x = -1711 ou 89 e y = 860, 460, …, -1140 em relação a esse pacote.
-_ITALO_GDS = "main_chip_Wender/circuito-italo-v1/Nanotools_Italo_SWG.gds"
-_ITALO_X = (-3258.590, -1458.590)
-_ITALO_Y = (2326.020, 1926.020, 1526.020, 1126.020, 726.020, 326.020)
-for _x_italo in _ITALO_X:
-    for _y_italo in _ITALO_Y:
-        CIRCUITOS_SECUNDARIOS.append(
-            {
-                "nome": "italo-v1",
-                "gds": _ITALO_GDS,
-                "celula": "TOP",
-                "origem_um": (_x_italo, _y_italo),
-            }
-        )
+# Doze faixas num GDS só. Esquerda, de cima para baixo: linhas 1 a 6.
+# Direita: linhas 7 a 12. As linhas 1 e 6 repetem o box de 40,92 µm.
+# O sweep das linhas 2 a 5 continua nas linhas 7 a 12.
+# A origem é o canto inferior esquerdo da linha 6.
+CIRCUITOS_SECUNDARIOS.append(
+    {
+        "nome": "italo-v1",
+        "gds": "main_chip_Wender/circuito-italo-v1/Nanotools_Italo_SWG.gds",
+        "celula": "TOP",
+        "origem_um": (-3258.590, 326.020),
+    }
+)
 
 # Falhas duras já presentes no main_layout.gds. O DRC final lista essas
 # contagens e não interrompe por elas. Metal e qualquer outra categoria
