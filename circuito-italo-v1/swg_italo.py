@@ -8,10 +8,9 @@ A primeira faixa (a de cima) repete o box length de 40,92 µm. As outras
 deslizam um período de 0,22 µm por faixa e, dentro da faixa, um período
 por coluna.
 
-No Lucivaldo são 10 faixas: a de cima repete 40,92 µm e as outras nove
-varrem. No Wender são 12 faixas, seis em cada coluna. As linhas 1 e 6
-repetem 40,92 µm. O sweep das linhas 2 a 5 continua nas linhas 7 a 12,
-na coluna da direita, e passa um período do último valor do Lucivaldo.
+No Lucivaldo são 10 faixas à direita, com a de cima em 40,92 µm, e mais
+10 faixas à esquerda de x = −2300, que ampliam o sweep. No Wender as
+12 faixas são cópias da linha de 40,92 µm.
 
     uv run python circuito-italo-v1/swg_italo.py
 """
@@ -384,8 +383,8 @@ def periodos_da_faixa(indice: int) -> tuple[int, ...]:
     return tuple(N_CAIXA + (indice - 5) + (coluna_i - 2) for coluna_i in range(5))
 
 
-def faixa(indice: int) -> pf.Component:
-    chave = periodos_da_faixa(indice)
+def faixa(periodos: tuple[int, ...]) -> pf.Component:
+    chave = periodos
     pronta = _faixas.get(chave)
     if pronta is not None:
         return pronta
@@ -399,52 +398,57 @@ def faixa(indice: int) -> pf.Component:
     return comp
 
 
-def _montar(nome: str, posicoes: list[tuple[float, float, int]]) -> pf.Component:
+def _montar(nome: str, posicoes: list[tuple[float, float, tuple[int, ...]]]) -> pf.Component:
     topo = pf.Component(nome, technology=tech)
-    for x, y, indice in posicoes:
-        ref = topo.add_reference(faixa(indice))
+    for x, y, periodos in posicoes:
+        ref = topo.add_reference(faixa(periodos))
         ref.origin = (x, y)
     return topo
 
 
-def posicoes_lucivaldo() -> list[tuple[float, float, int]]:
-    """Dez faixas. As seis de cima na coluna x=0; as quatro de baixo, em x=150."""
+def posicoes_lucivaldo() -> list[tuple[float, float, tuple[int, ...]]]:
+    """Dez faixas à direita e dez novas à esquerda, com a borda em x = −2300."""
+    posicoes: list[tuple[float, float, tuple[int, ...]]] = []
     n = 10
-    posicoes = []
     for indice in range(n):
         k = (n - 1) - indice
         x = 0.0 if k >= 4 else 150.0
-        posicoes.append((x, k * PASSO_FAIXA_UM, indice))
+        posicoes.append((x, k * PASSO_FAIXA_UM, periodos_da_faixa(indice)))
+    # Vãos de 314 µm entre as trilhas de metal. A faixa tem 280 µm.
+    # A borda direita de cada faixa fica em x = −2300 no chip.
+    inicios = (175, 176, 177, 178, 179, 189, 190, 191, 192, 193)
+    centros = (2050.0, 1650.0, 1250.0, 850.0, 450.0, -350.0, -750.0, -1150.0, -1550.0, -1950.0)
+    for inicio, centro in zip(inicios, centros):
+        periodos = tuple(inicio + passo for passo in range(5))
+        largura = float(faixa(periodos).bounds()[1][0])
+        x_local = -2300.0 - largura - 2390.0
+        y_local = (centro - ALTURA_FAIXA_UM / 2.0) + 1690.0
+        posicoes.append((x_local, y_local, periodos))
     return posicoes
 
 
-def posicoes_wender() -> list[tuple[float, float, int]]:
-    """Doze faixas: seis na esquerda (linhas 1 a 6) e seis na direita (7 a 12).
-
-    As linhas 1 e 6 repetem o box de 40,92 µm. As linhas 2 a 5 varrem, e
-    as linhas 7 a 12 continuam esse sweep na coluna da direita.
-    """
-    # Índice de periodos_da_faixa na ordem das linhas 1..12.
-    indices = (0, 1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10)
+def posicoes_wender() -> list[tuple[float, float, tuple[int, ...]]]:
+    """Doze faixas iguais à referência de 40,92 µm, em duas colunas de seis."""
+    referencia = periodos_da_faixa(0)
     posicoes = []
-    for linha, indice in enumerate(indices):
+    for linha in range(12):
         coluna = 0 if linha < 6 else 1
         altura = linha if linha < 6 else linha - 6
         y = (5 - altura) * PASSO_FAIXA_UM
-        posicoes.append((coluna * 1800.0, y, indice))
+        posicoes.append((coluna * 1800.0, y, referencia))
     return posicoes
 
 
-def _conferir_faixa(indice: int) -> None:
-    comp = faixa(indice)
+def _conferir_faixa(periodos: tuple[int, ...]) -> None:
+    comp = faixa(periodos)
     (x0, y0), (x1, y1) = comp.bounds()
-    extra = sum(caixa_um(n) - caixa_um(N_CAIXA) for n in periodos_da_faixa(indice))
+    extra = sum(caixa_um(n) - caixa_um(N_CAIXA) for n in periodos)
     esperado = LARGURA_FAIXA_UM + extra
     if abs(float(x0)) > 0.02 or abs(float(y0)) > 0.02:
-        raise RuntimeError(f"faixa {indice} não começa em (0, 0): {(x0, y0)}")
+        raise RuntimeError(f"faixa {periodos} não começa em (0, 0): {(x0, y0)}")
     if abs(float(x1) - esperado) > 0.05 or abs(float(y1) - ALTURA_FAIXA_UM) > 0.05:
         raise RuntimeError(
-            f"faixa {indice} mede {float(x1):.3f} × {float(y1):.3f} µm; "
+            f"faixa {periodos} mede {float(x1):.3f} × {float(y1):.3f} µm; "
             f"esperado {esperado:.3f} × {ALTURA_FAIXA_UM:.3f}"
         )
 
@@ -452,8 +456,8 @@ def _conferir_faixa(indice: int) -> None:
 def gerar() -> tuple[pf.Component, pf.Component]:
     _reserva_original(GDS_ORIGINAL, PASTA / "Nanotools_Italo_SWG.gds")
     _reserva_original(GDS_WENDER_ORIGINAL, GDS_WENDER)
-    for indice in range(11):
-        _conferir_faixa(indice)
+    for periodos in {item[2] for item in (*posicoes_lucivaldo(), *posicoes_wender())}:
+        _conferir_faixa(periodos)
     lucivaldo = _montar("TOP", posicoes_lucivaldo())
     wender = _montar("TOP_Wender", posicoes_wender())
     pf.write_layout(str(GDS_LUCIVALDO), lucivaldo)

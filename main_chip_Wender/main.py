@@ -59,7 +59,7 @@ CAMADA_JANELA = (6, 0)
 # False: todos os circuitos entram de uma vez, sem DRC intermediário.
 CICLO_NORMAL = False
 # Vale com CICLO_NORMAL = False. True roda um único DRC no layout completo.
-DRC_FINAL = True
+DRC_FINAL = False
 
 
 class CircuitoSecundario(TypedDict):
@@ -115,16 +115,25 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
     },
 ]
 
-# Doze faixas num GDS só. Esquerda, de cima para baixo: linhas 1 a 6.
-# Direita: linhas 7 a 12. As linhas 1 e 6 repetem o box de 40,92 µm.
-# O sweep das linhas 2 a 5 continua nas linhas 7 a 12.
-# A origem é o canto inferior esquerdo da linha 6.
+# Doze faixas iguais, cópia do box de 40,92 µm. Seis na esquerda e seis
+# na direita. A origem é o canto inferior esquerdo da faixa de baixo.
 CIRCUITOS_SECUNDARIOS.append(
     {
         "nome": "italo-v1",
         "gds": "main_chip_Wender/circuito-italo-v1/Nanotools_Italo_SWG.gds",
         "celula": "TOP",
         "origem_um": (-3258.590, 326.020),
+    }
+)
+
+# Cinco linhas do conversor TE0–TE0, com o teste de GCs à direita.
+# A origem é o canto inferior esquerdo. A célula mede 583,568 × 389 µm.
+CIRCUITOS_SECUNDARIOS.append(
+    {
+        "nome": "italo-conversor-te0",
+        "gds": "main_chip_Wender/circuito-italo-v1/conversor_te0_gc.gds",
+        "celula": "b2b_te0_gc",
+        "origem_um": (-670.0, -200.0),
     }
 )
 

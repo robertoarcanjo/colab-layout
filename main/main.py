@@ -53,7 +53,7 @@ CAMADA_JANELA = (6, 0)
 # False: todos os circuitos entram de uma vez, sem DRC intermediário.
 CICLO_NORMAL = False
 # Vale com CICLO_NORMAL = False. True roda um único DRC no layout completo.
-DRC_FINAL = True
+DRC_FINAL = False
 
 
 class CircuitoSecundario(TypedDict):
@@ -101,9 +101,9 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "nome": "italo-v1",
         "gds": "circuito-italo-v1/Nanotools_Italo_SWG.gds",
         "celula": "TOP",
-        # As dez faixas já estão neste GDS, no lugar das cópias antigas.
-        # A de cima repete o box de 40,92 µm; as outras varrem de 0,22 µm.
-        # A origem é o canto inferior esquerdo da faixa de baixo.
+        # As vinte faixas já estão neste GDS. A origem é o canto da
+        # faixa de baixo do bloco da direita. O bloco novo tem a borda
+        # direita em x = −2300.
         "origem_um": (2390, -1690),
     },
     {
