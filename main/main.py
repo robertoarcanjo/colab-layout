@@ -68,31 +68,6 @@ class OrigemDrc(TypedDict):
     design_area_um2: float
 
 
-"""{
-        "nome": "isa-jose-v1",
-        "gds": "circuito-isa-jose-v1/mzi_O4_2estagios_gc_array.gds",
-        "celula": "MZI_O4_GC7",
-        # A célula vai de cerca de (-127, -744) a (1215, 743) µm.
-        # Os dois blocos ficam lado a lado, com a base em y=-4400,
-        # centrados na faixa x=2300–3800 que o passivo ocupava.
-        "origem_um": (1140.0, -3260.0),
-    },
-    {
-        "nome": "isa-jose-v1-pdk",
-        "gds": "circuito-isa-jose-v1/mzi_O4_2estagios_gc_array_pdk.gds",
-        "celula": "MZI_O4_GC7_PDK",
-        # 100 µm à direita do bloco anterior. A célula vai de cerca de
-        # (-127, -744) a (1224, 743) µm.
-        "origem_um": (2800.0, -3450.0),
-    },
-    {
-        "nome": "isa-jose-v1-rota",
-        "gds": "circuito-isa-jose-v1/rota_eletrica.gds",
-        "celula": "rota_eletrica",
-        # Coordenadas absolutas da main. O GDS sai de roteamento_eletrico.py.
-        "origem_um": (0.0, 0.0),
-    },
-"""
 # Cada pessoa acrescenta o próprio circuito nesta lista.
 CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
     {
@@ -228,6 +203,31 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
         "celula": "TOP",
         "origem_um": (0, 0),
     },
+    {
+        "nome": "lucas_mzi_1e_1",
+        "gds": "circuitos-lucas-v2/MZI_1_stage_Lucas.gds",
+        "celula": "TOP",
+        "origem_um": (-1120, -2857.655),
+    },
+    {
+        "nome": "lucas_mzi_1e_2",
+        "gds": "circuitos-lucas-v2/MZI_1_stage_Lucas.gds",
+        "celula": "TOP",
+        "origem_um": (-1120, -3157.655),
+    },
+    {
+        "nome": "mariana_mzi_1e_1",
+        "gds": "circuito-mariana-v2/MZI_1_stage_Mariana.gds",
+        "celula": "TOP",
+        "origem_um": (-1120, -3457.655),
+    },
+    {
+        "nome": "mariana_mzi_1e_2",
+        "gds": "circuito-mariana-v2/MZI_1_stage_Mariana.gds",
+        "celula": "TOP",
+        "origem_um": (-1120, -3757.655),
+    },
+
 ]
 
 # -1690.00000 
