@@ -88,7 +88,7 @@ CIRCUITOS_SECUNDARIOS: list[CircuitoSecundario] = [
     {
         "nome": "isa-jose-hyb-pack2",
         "gds": "main_chip_Wender\isa-jose\hybrid90_y_gc_pack.gds",
-        "celula": "TOP",
+        "celula": "hybrid90_y_gc_pack",
         "origem_um": (640, 3000),
     },
     {
