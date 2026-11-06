@@ -8,7 +8,7 @@ I0-M1\nGC_OUT-4,10,890,-3634,direita,
 I0-M1\nGC_OUT\nFF0,10,890,-2634,direita, 
 I0-M1\nGC_OUT\nFF1,10,890,-3884,direita, 
 I0-M1\nGC_IN,10,2390,-3260,esquerda,
-LM-M1, 140, -3245, -4327, esquerda, MZI com curvas de 5um
+LM-M1, 140, -3245, -4370, esquerda, MZI com curvas de 5um
 ML-M1, 140, -1430, -4130, esquerda, MZI com curvas de 5um
 LM-M2, 140, -3600, 2830, esquerda, MZI com curvas de 10um
 ML-M2, 140, -2400, 4100, esquerda, MZI com curvas de 10um
