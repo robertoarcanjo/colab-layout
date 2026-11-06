@@ -150,11 +150,14 @@ O DRC da main usa o deck NanoSOI Silicon v10 em [`main/drc/NanoSOI_Silicon_v10.d
 
   ![Modelo de gc para fiber array](figs/gc_array01.png)
 
-## Layout da main
+## Layouts
 
-O arquivo enviado à foundry é o [`main/saida/main.oas`](main/saida/main.oas). 
 
-A figura abaixo é o layout atualizado.
+Chip - Lucivaldo:
 
-![Layout main.oas](figs/main.png)
+![Chip do Lucivaldo](figs/main.png)
+
+Chip - Wender:
+
+![Chip do Wender](main_chip_Wender/saida/main.png)
 
