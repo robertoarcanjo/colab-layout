@@ -11,3 +11,39 @@ IT-C09, 40, -647.59, 1836, baixo, Circuito 01 de Ítalo
 IT-C10, 40, -647.59, 1436, baixo, Circuito 01 de Ítalo
 IT-C11, 40, -647.59, 1036, baixo, Circuito 01 de Ítalo
 IT-C12, 40, -647.59, 636, baixo, Circuito 01 de Ítalo
+I0-G01, 40, 895, 2835, baixo, Híbrida 90 - variação 1 de gamma
+I0-G02, 40, 895, 2435, baixo, Híbrida 90 - variação 2 de gamma
+I0-G03, 40, 895, 2035, baixo, Híbrida 90 - variação 3 de gamma
+I0-G04, 40, 895, 1635, baixo, Híbrida 90 - variação 4 de gamma
+I0-G05, 40, 895, 1235, baixo, Híbrida 90 - variação 5 de gamma
+I0-G06, 40, 895, 835, baixo, Híbrida 90 - variação 6 de gamma
+I0-LC1, 40, 1450, 2835, baixo, Híbrida 90 - variação 1 do comprimento da cunha
+I0-LC2, 40, 1450, 2435, baixo, Híbrida 90 - variação 2 do comprimento da cunha
+I0-LC3, 40, 1450, 2035, baixo, Híbrida 90 - variação 3 do comprimento da cunha
+I0-LC4, 40, 1450, 1635, baixo, Híbrida 90 - variação 4 do comprimento da cunha
+I0-LC5, 40, 1450, 1235, baixo, Híbrida 90 - variação 5 do comprimento da cunha
+I0-LC6, 40, 1450, 835, baixo, Híbrida 90 - variação 6 do comprimento da cunha
+I0-LT1, 40, 2015, 2835, baixo, Híbrida 90 - variação 1 do comprimento do taper
+I0-LT2, 40, 2015, 2435, baixo, Híbrida 90 - variação 2 do comprimento do taper
+I0-LT3, 40, 2015, 2035, baixo, Híbrida 90 - variação 3 do comprimento do taper
+I0-LT4, 40, 2015, 1635, baixo, Híbrida 90 - variação 4 do comprimento do taper
+I0-LT5, 40, 2015, 1235, baixo, Híbrida 90 - variação 5 do comprimento do taper
+I0-LT6, 40, 2015, 835, baixo, Híbrida 90 - variação 6 do comprimento do taper
+I0-TI1, 40, 2580, 2835, baixo, Híbrida 90 - variação 1 da abertura do taper de entrada
+I0-TI2, 40, 2580, 2435, baixo, Híbrida 90 - variação 2 da abertura do taper de entrada
+I0-TI3, 40, 2580, 2035, baixo, Híbrida 90 - variação 3 da abertura do taper de entrada
+I0-TI4, 40, 2580, 1635, baixo, Híbrida 90 - variação 4 da abertura do taper de entrada
+I0-TI5, 40, 2580, 1235, baixo, Híbrida 90 - variação 5 da abertura do taper de entrada
+I0-TI6, 40, 2580,  835, baixo, Híbrida 90 - variação 6 da abertura do taper de entrada
+I0-TO1, 40, 3145, 2835, baixo, Híbrida 90 - variação 1 da abertura do taper de saída
+I0-TO2, 40, 3145, 2435, baixo, Híbrida 90 - variação 2 da abertura do taper de saída
+I0-TO3, 40, 3145, 2035, baixo, Híbrida 90 - variação 3 da abertura do taper de saída
+I0-TO4, 40, 3145, 1635, baixo, Híbrida 90 - variação 4 da abertura do taper de saída
+I0-TO5, 40, 3145, 1235, baixo, Híbrida 90 - variação 5 da abertura do taper de saída
+I0-TO6, 40, 3145,  835, baixo, Híbrida 90 - variação 6 da abertura do taper de saída
+I0-LR1, 40, 3710, 2835, baixo, Híbrida 90 - variação 1 do comprimento do MMI retangular
+I0-LR2, 40, 3710, 2435, baixo, Híbrida 90 - variação 2 do comprimento do MMI retangular
+I0-LR3, 40, 3710, 2035, baixo, Híbrida 90 - variação 3 do comprimento do MMI retangular
+I0-LR4, 40, 3710, 1635, baixo, Híbrida 90 - variação 4 do comprimento do MMI retangular
+I0-LR5, 40, 3710, 1235, baixo, Híbrida 90 - variação 5 do comprimento do MMI retangular
+I0-LR6, 40, 3710, 835,  baixo, Híbrida 90 - variação 6 do comprimento do MMI retangular
