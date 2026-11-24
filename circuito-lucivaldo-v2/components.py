@@ -1,8 +1,11 @@
 from pathlib import Path
-
 import gdsfactory as gf
+from sympy import comp
 
-folder = str(Path(__file__).resolve().parent / "Components")
+
+
+folder =  str(Path(__file__).resolve().parent / "Components")
+folder = r'C:\Users\luciv\Documents\Lucivaldo\R&D\Components'
 gf.gpdk.PDK.activate()
 
 
@@ -140,6 +143,22 @@ def dc50_50() -> gf.Component:
     comp.add_port(name='o2', center=(-11.45, 0.25- 5.51/2), width=0.5, orientation=180, layer=(1,0), port_type='optical')
     comp.add_port(name='o3', center=(11.45, 5.26- 5.51/2), width=0.5, orientation=0, layer=(1,0), port_type='optical')
     comp.add_port(name='o4', center=(11.45, 0.25- 5.51/2), width=0.5, orientation=0, layer=(1,0), port_type='optical')
+
+    return comp
+
+
+@gf.cell
+
+def dc_adiabatic_TM() -> gf.Component:
+    filename= folder + '/ebeam_adiabatic_tm1550.gds'
+    cellname= 'ebeam_adiabatic_tm1550'
+
+    comp = gf.import_gds(filename, cellname=cellname)
+
+    comp.add_port(name='o1', center=(0.1, 1.5), width=0.5, orientation=180, layer=(1,0), port_type='optical')
+    comp.add_port(name='o2', center=(0.1,-1.5), width=0.5, orientation=180, layer=(1,0), port_type='optical')
+    comp.add_port(name='o3', center=(217.8, 1.5), width=0.5, orientation=0, layer=(1,0), port_type='optical')
+    comp.add_port(name='o4', center=(217.8, -1.5), width=0.5, orientation=0, layer=(1,0), port_type='optical')
 
     return comp
 
@@ -350,6 +369,81 @@ def phaseShifter1000u2x2() -> gf.Component:
         port_type='electrical',
     )
     return comp
+
+
+@gf.cell
+def phaseShifter1000u2x2_Erick(device) -> gf.Component:
+    if device == 1:
+        filename = folder + '/PhaseShifterTM_1000microns_2x2_Erick.gds'
+        cellname = 'PhaseShifterTM_1000microns_2x2_Erick'
+    else:
+        filename = folder + '/PhaseShifterTM_1000microns_2x2_Erick2.gds'
+        cellname = 'PhaseShifterTM_1000microns_2x2_Erick2'
+
+    comp = gf.import_gds(filename, cellname=cellname)
+
+    pad_width = 86
+    boxlength = 1720
+
+    comp.add_port(
+        name='o1',
+        center=(0, 254.25),
+        width=0.5,
+        orientation=180,
+        layer=(1, 0),
+        port_type='optical'
+    )
+    comp.add_port(
+        name='o2',
+        center=(0, 127.25),
+        width=0.5,
+        orientation=180,
+        layer=(1, 0),
+        port_type='optical'
+    )
+    comp.add_port(
+        name='o3',
+        center=(0, 0.25),
+        width=0.5,
+        orientation=180,
+        layer=(1, 0),
+        port_type='optical'
+    )
+    comp.add_port(
+        name='o4',
+        center=(0, 381.25),
+        width=0.5,
+        orientation=180,
+        layer=(1, 0),
+        port_type='optical')
+
+    comp.add_port(
+        name='e1',
+        center=(boxlength  - pad_width / 2, 333.75),
+        width=pad_width,
+        orientation=90,
+        layer=(12, 0),
+        port_type='electrical',
+    )
+    comp.add_port(
+        name='e2',
+        center=(boxlength,233.75 - pad_width/2),
+        width=pad_width,
+        orientation=0,
+        layer=(12, 0),
+        port_type='electrical',
+    )
+    comp.add_port(
+        name='e3',
+        center=(boxlength - pad_width / 2, 47.75),
+        width=pad_width,
+        orientation=-90,
+        layer=(12, 0),
+        port_type='electrical',
+    )
+    return comp
+
+
 
 
 def phaseShifter2x2() -> gf.Component:
