@@ -41,6 +41,7 @@ LARGURA_ENTRADA_NM = 1100
 LARGURA_CENTRAL_NM = 4000
 LARGURA_LATERAL_NM = 1900
 LARGURA_SAIDA_NM = 500
+LARGURA_PONTA_NM = 70
 FOLGA_NM = 100
 N_TAPER = TAPER_NM // PERIODO_NM
 N_CAIXA = CAIXA_NM // PERIODO_NM
@@ -143,22 +144,33 @@ def mmi_swg(*, box_length: float = 40.92) -> pf.Component:
             dentes.append(_retangulo(x0, x1, centro_lateral, lateral))
             dentes.append(_retangulo(x0, x1, -centro_lateral, lateral))
 
-    # O núcleo contínuo atravessa as fendas de óxido do taper e entra um
-    # slot de silício na caixa, como no GDS de origem.
+    # O núcleo contínuo atravessa as fendas de óxido e entra um slot de
+    # silício na caixa. Na boca da caixa os quatro fecham em 70 nm: a
+    # entrada afunila desde 1,1 µm e cada saída desde 0,5 µm.
     nucleo_x1 = round(x_caixa + um(FENDA_SI_NM), 3)
     nucleo_x0 = round(x_saida - um(FENDA_SI_NM), 3)
+    ponta = um(LARGURA_PONTA_NM) / 2.0
+    meia_entrada = um(LARGURA_ENTRADA_NM) / 2.0
+    meia_saida = um(LARGURA_SAIDA_NM) / 2.0
     dentes.append(
-        pf.Rectangle(
-            corner1=(0.0, -um(LARGURA_ENTRADA_NM) / 2.0),
-            corner2=(nucleo_x1, um(LARGURA_ENTRADA_NM) / 2.0),
+        pf.Polygon(
+            [
+                (0.0, -meia_entrada),
+                (0.0, meia_entrada),
+                (nucleo_x1, ponta),
+                (nucleo_x1, -ponta),
+            ]
         )
     )
     for centro in (-centro_lateral, 0.0, centro_lateral):
-        meia = um(LARGURA_SAIDA_NM) / 2.0
         dentes.append(
-            pf.Rectangle(
-                corner1=(nucleo_x0, centro - meia),
-                corner2=(comprimento, centro + meia),
+            pf.Polygon(
+                [
+                    (nucleo_x0, centro - ponta),
+                    (nucleo_x0, centro + ponta),
+                    (comprimento, centro + meia_saida),
+                    (comprimento, centro - meia_saida),
+                ]
             )
         )
     comp.add("Si", *dentes)
