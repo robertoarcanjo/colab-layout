@@ -160,7 +160,7 @@ METAL_CLEAR = (
 AVISOS = frozenset({"pin_layer", "black_box", "window"})
 
 FIGS = HERE / "saida"
-MAIN_GDS = SAIDA / "main.gds"
+MAIN_GDS = SAIDA / "main_Wender.gds"
 MAIN_OAS = SAIDA / "main.oas"
 MAIN_PNG = FIGS / "main.png"
 PNG_PX = 4000
